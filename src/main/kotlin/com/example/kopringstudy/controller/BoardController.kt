@@ -1,22 +1,16 @@
 package com.example.kopringstudy.controller
 
-import com.example.kopringstudy.entity.Board
+import com.example.kopringstudy.controller.dto.BoardResponse
+import com.example.kopringstudy.domain.Board
 import com.example.kopringstudy.service.BoardService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api")
 class BoardController(
-    private val boardService: BoardService
+        private val boardService: BoardService
 ) {
 
     @GetMapping("/boards")
@@ -25,8 +19,9 @@ class BoardController(
     }
 
     @GetMapping("/boards/{id}")
-    fun findBoard(@PathVariable("id") id: Long): ResponseEntity<Board> {
-        return ResponseEntity<Board>(boardService.findById(id), HttpStatus.OK)
+    fun findBoard(@PathVariable("id") id: Long): ResponseEntity<BoardResponse> {
+        val board = boardService.findById(id)
+        return ResponseEntity.ok(BoardResponse.from(board))
     }
 
     @PostMapping("/boards")

@@ -1,19 +1,19 @@
 package com.example.kopringstudy.service
 
-import com.example.kopringstudy.entity.Board
+import com.example.kopringstudy.domain.Board
+import com.example.kopringstudy.domain.BoardRepository
 import com.example.kopringstudy.exception.BoardNotFoundException
-import com.example.kopringstudy.repository.BoardRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BoardService(
-    private val boardRepository: BoardRepository
+        private val boardRepository: BoardRepository
 ) {
 
     @Transactional(readOnly = true)
     fun findAll(): List<Board> {
-        return boardRepository.findAll();
+        return boardRepository.findAll()
     }
 
     @Transactional(readOnly = true)
@@ -28,9 +28,10 @@ class BoardService(
 
     @Transactional
     fun edit(id: Long, updateBoard: Board): Board {
-        var board: Board = boardRepository.findById(id).orElseThrow { BoardNotFoundException() }
-        board.title = updateBoard.title
-        board.content = updateBoard.content
+        val board: Board = boardRepository.findById(id).orElseThrow { BoardNotFoundException() }
+
+        board.update(updateBoard.title, updateBoard.content)
+
         return board
     }
 
